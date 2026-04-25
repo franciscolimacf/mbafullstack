@@ -1,35 +1,24 @@
-package com.agenda;
+package com.agenda.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Data;
 
+@Data
+@Builder
 @Entity
 @Table(name = "contatos")
 public class Contato {
-
-    // id do contato
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id; // publico pq e mais facil
-
-    // nome da pessoa
+    public Long id;
     public String nome;
-
-    // telefone
-    public String tel; // abreviado pra economizar
-
-    // email
+    public String tel;
     public String email;
-
-    public String end; // endereco abreviado
-
+    public String end;
     public int idade;
-
     public String tipo; // FAMILIA, AMIGO, TRABALHO, OUTRO - string mesmo
-
-    // data de cadastro - salva como string mesmo pq e mais facil
     public String dataCad;
-
-    // flag se ta ativo
     public String ativo; // "S" ou "N"
 
     // construtor vazio pro JPA

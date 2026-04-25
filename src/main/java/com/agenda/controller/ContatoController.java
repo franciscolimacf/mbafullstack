@@ -1,5 +1,11 @@
-package com.agenda;
+package com.agenda.controller;
 
+import com.agenda.converters.Converter;
+import com.agenda.entity.Contato;
+import com.agenda.repository.ContatoRepository;
+import com.agenda.dtos.ContatoRequest;
+import com.agenda.dtos.ContatoResponse;
+import com.agenda.services.ContatoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,14 +17,32 @@ import java.util.*;
 @RequestMapping("/contatos")
 public class ContatoController {
 
+    private ContatoService service;
+    private Converter converter;
+
     @Autowired
     public ContatoRepository repo;
+
+
 
     public static List<String> logs = new ArrayList<>();
 
     public static int cont = 0;
 
     public static boolean init = false;
+
+    public ContatoController(ContatoService service, Converter converter) {
+        this.service = service;
+        this.converter = converter;
+    }
+
+    @PostMapping("/incluir2")
+    public ResponseEntity<String> incluir2(@RequestBody ContatoRequest request){
+        var domain = service.incluir(converter.ConvertRequestToDomain(request));
+        var response = converter.ConvertDomainToResponse(domain);
+        return ResponseEntity.ok("Usuário cadastrado com id: " + response.getId());
+    }
+
 
     @PostMapping("/incluir")
     public ResponseEntity<String> incluir(@RequestBody Contato c) {
