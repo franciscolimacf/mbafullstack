@@ -1,18 +1,25 @@
 package com.agenda.repository;
 
-import com.agenda.domain.ContatoDomain;
-import com.agenda.entity.Contato;
+import com.agenda.domain.ContatoTipo;
+import com.agenda.entity.ContatoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface ContatoRepository extends JpaRepository<Contato, Long> {
+@Repository
+public interface ContatoRepository extends JpaRepository<ContatoEntity, Long> {
+
+    List<ContatoEntity> findByNomeContainingIgnoreCase(String nome);
+    List<ContatoEntity> findByEmailContainingIgnoreCase(String email);
+    List<ContatoEntity> findByTelefoneContaining(String tel);
+    List<ContatoEntity> findByTipo(ContatoTipo tipo);
 
     public default boolean VerificarEmail(String email){
-        List<Contato> todos = this.findAll();
+        List<ContatoEntity> todos = this.findAll();
 
-        for (int i = 0; i < todos.size(); i++) {
-            if (todos.get(i).getEmail() != null && todos.get(i).getEmail().equals(email)) {
+        for (ContatoEntity todo : todos) {
+            if (todo.getEmail() != null && todo.getEmail().equals(email)) {
                 return false;
             }
         }

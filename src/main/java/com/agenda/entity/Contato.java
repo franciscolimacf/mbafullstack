@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 @Builder
 @Entity
-@Table(name = "contatos")
 public class Contato {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,11 +14,12 @@ public class Contato {
     public String nome;
     public String tel;
     public String email;
+    @Column(name = "endereco")
     public String end;
     public int idade;
-    public String tipo; // FAMILIA, AMIGO, TRABALHO, OUTRO - string mesmo
+    public String tipo;
     public String dataCad;
-    public String ativo; // "S" ou "N"
+    public String ativo;
 
     // construtor vazio pro JPA
     public Contato() {

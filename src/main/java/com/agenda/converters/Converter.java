@@ -1,13 +1,16 @@
 package com.agenda.converters;
 
 import com.agenda.domain.ContatoDomain;
+import com.agenda.domain.ContatoTipo;
 import com.agenda.dtos.ContatoRequest;
 import com.agenda.dtos.ContatoResponse;
 import com.agenda.entity.Contato;
+import com.agenda.entity.ContatoEntity;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class Converter {
@@ -15,44 +18,43 @@ public class Converter {
         return ContatoDomain.builder()
                 .nome(request.getNome())
                 .tel(request.getTel())
-                .end(request.getEnd())
+                .endereco(request.getEndereco())
                 .idade(request.getIdade())
                 .email(request.getEmail())
-                .dataCad(request.getDataCad())
                 .tipo(request.getTipo())
                 .build();
 
     }
 
-    public Contato ConvertDomainToEntity(ContatoDomain domain){
-        var contato = Contato.builder()
+    public ContatoEntity ConvertDomainToEntity(ContatoDomain domain){
+        var contato = ContatoEntity.builder()
                 .nome(domain.getNome())
-                .tel(domain.getTel())
-                .end(domain.getEnd())
+                .telefone(domain.getTel())
+                .endereco(domain.getEndereco())
                 .idade(domain.getIdade())
                 .email(domain.getEmail())
                 .dataCad(domain.getDataCad())
-                .tipo(domain.getTipo())
+                .tipo(domain.getTipo().toString())
                 .build();
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         contato.setDataCad(sdf.format(new Date()));
 
-        contato.setAtivo("true");
+        contato.setAtivo(true);
 
         return contato;
     }
 
-    public ContatoDomain ConvertEntityToDomain(Contato entity){
+    public ContatoDomain ConvertEntityToDomain(ContatoEntity entity){
         return ContatoDomain.builder()
                 .id(entity.getId())
                 .nome(entity.getNome())
-                .tel(entity.getTel())
-                .end(entity.getEnd())
+                .tel(entity.getTelefone())
+                .endereco(entity.getEndereco())
                 .idade(entity.getIdade())
                 .email(entity.getEmail())
                 .dataCad(entity.getDataCad())
-                .tipo(entity.getTipo())
+                .tipo(ContatoTipo.valueOf(entity.getTipo()))
                 .build();
     }
 
@@ -61,11 +63,21 @@ public class Converter {
                 .id(domain.getId())
                 .nome(domain.getNome())
                 .tel(domain.getTel())
-                .end(domain.getEnd())
+                .end(domain.getEndereco())
                 .idade(domain.getIdade())
                 .email(domain.getEmail())
                 .dataCad(domain.getDataCad())
-                .tipo(domain.getTipo())
+                .tipo(domain.getTipo().toString())
                 .build();
+    }
+
+    public List<ContatoDomain> ConvertListEntityToListDomain(List<ContatoEntity> entities){
+        return entities.stream()
+                .map(this::ConvertEntityToDomain).toList();
+    }
+
+    public List<ContatoResponse> ConvertListDomainToListResponse(List<ContatoDomain> domains){
+        return domains.stream()
+                .map(this::ConvertDomainToResponse).toList();
     }
 }
