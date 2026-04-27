@@ -8,7 +8,7 @@ import lombok.Data;
 public class ContatoResponse {
     private Long id;
     private String nome;
-    private String tel;
+    private String telefone;
     private String email;
     private String end;
     private int idade;

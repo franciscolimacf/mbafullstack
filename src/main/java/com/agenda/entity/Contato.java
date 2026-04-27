@@ -12,10 +12,10 @@ public class Contato {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
     public String nome;
-    public String tel;
+    public String telefone;
     public String email;
     @Column(name = "endereco")
-    public String end;
+    public String endereco;
     public int idade;
     public String tipo;
     public String dataCad;
@@ -26,13 +26,13 @@ public class Contato {
     }
 
     // construtor com tudo
-    public Contato(Long id, String nome, String tel, String email, String end, int idade, String tipo, String dataCad,
+    public Contato(Long id, String nome, String telefone, String email, String endereco, int idade, String tipo, String dataCad,
             String ativo) {
         this.id = id;
         this.nome = nome;
-        this.tel = tel;
+        this.telefone = telefone;
         this.email = email;
-        this.end = end;
+        this.endereco = endereco;
         this.idade = idade;
         this.tipo = tipo;
         this.dataCad = dataCad;
@@ -57,11 +57,11 @@ public class Contato {
     }
 
     public String getTel() {
-        return tel;
+        return telefone;
     }
 
-    public void setTel(String tel) {
-        this.tel = tel;
+    public void setTel(String telefone) {
+        this.telefone = telefone;
     }
 
     public String getEmail() {
@@ -73,11 +73,11 @@ public class Contato {
     }
 
     public String getEnd() {
-        return end;
+        return endereco;
     }
 
-    public void setEnd(String end) {
-        this.end = end;
+    public void setEnd(String endereco) {
+        this.endereco = endereco;
     }
 
     public int getIdade() {
@@ -118,7 +118,7 @@ public class Contato {
             return false;
         if (this.nome.length() < 3)
             return false;
-        if (this.tel == null || this.tel.equals(""))
+        if (this.telefone == null || this.telefone.equals(""))
             return false;
         if (this.email == null || this.email.equals(""))
             return false;
@@ -139,9 +139,9 @@ public class Contato {
         String s = "";
         s = s + "ID: " + this.id + " | ";
         s = s + "Nome: " + this.nome + " | ";
-        s = s + "Tel: " + this.tel + " | ";
+        s = s + "Tel: " + this.telefone + " | ";
         s = s + "Email: " + this.email + " | ";
-        s = s + "End: " + this.end + " | ";
+        s = s + "End: " + this.endereco + " | ";
         s = s + "Idade: " + this.idade + " | ";
         s = s + "Tipo: " + this.tipo + " | ";
         s = s + "Ativo: " + this.ativo;
