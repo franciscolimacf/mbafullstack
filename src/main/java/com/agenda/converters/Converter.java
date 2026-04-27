@@ -62,7 +62,7 @@ public class Converter {
         return ContatoResponse.builder()
                 .id(domain.getId())
                 .nome(domain.getNome())
-                .tel(domain.getTelefone())
+                .telefone(domain.getTelefone())
                 .end(domain.getEndereco())
                 .idade(domain.getIdade())
                 .email(domain.getEmail())
