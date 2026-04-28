@@ -1,5 +1,6 @@
 package com.agenda.entity;
 
+import com.agenda.domain.ContatoTipo;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -19,7 +20,7 @@ public class Contato {
     @Column(name = "endereco")
     private String endereco;
     private int idade;
-    private String tipo;
+    private ContatoTipo tipo;
     private LocalDateTime dataCad;
     private boolean ativo;
 

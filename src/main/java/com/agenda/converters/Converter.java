@@ -4,12 +4,10 @@ import com.agenda.domain.ContatoDomain;
 import com.agenda.domain.ContatoTipo;
 import com.agenda.dtos.ContatoRequest;
 import com.agenda.dtos.ContatoResponse;
-import com.agenda.entity.Contato;
 import com.agenda.entity.ContatoEntity;
 import org.springframework.stereotype.Component;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -17,7 +15,7 @@ public class Converter {
     public ContatoDomain ConvertRequestToDomain(ContatoRequest request){
         return ContatoDomain.builder()
                 .nome(request.getNome())
-                .telefone(request.getTel())
+                .telefone(request.getTelefone())
                 .endereco(request.getEndereco())
                 .idade(request.getIdade())
                 .email(request.getEmail())
@@ -34,11 +32,10 @@ public class Converter {
                 .idade(domain.getIdade())
                 .email(domain.getEmail())
                 .dataCad(domain.getDataCad())
-                .tipo(domain.getTipo().toString())
+                .tipo(ContatoTipo.valueOf(domain.getTipo().toString()))
                 .build();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        contato.setDataCad(sdf.format(new Date()));
+        contato.setDataCad(LocalDateTime.now());
 
         contato.setAtivo(true);
 
@@ -54,7 +51,7 @@ public class Converter {
                 .idade(entity.getIdade())
                 .email(entity.getEmail())
                 .dataCad(entity.getDataCad())
-                .tipo(ContatoTipo.valueOf(entity.getTipo()))
+                .tipo(ContatoTipo.valueOf(entity.getTipo().toString()))
                 .build();
     }
 
@@ -63,11 +60,11 @@ public class Converter {
                 .id(domain.getId())
                 .nome(domain.getNome())
                 .telefone(domain.getTelefone())
-                .end(domain.getEndereco())
+                .endereco(domain.getEndereco())
                 .idade(domain.getIdade())
                 .email(domain.getEmail())
                 .dataCad(domain.getDataCad())
-                .tipo(domain.getTipo().toString())
+                .tipo(ContatoTipo.valueOf(domain.getTipo().toString()))
                 .build();
     }
 

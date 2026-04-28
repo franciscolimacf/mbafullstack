@@ -1,11 +1,13 @@
 package com.agenda.entity;
 
+import com.agenda.domain.ContatoTipo;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 
 @Data
@@ -23,8 +25,8 @@ public class ContatoEntity {
     private String email;
     private String endereco;
     private int idade;
-    private String tipo;
-    private String dataCad;
+    private ContatoTipo tipo;
+    private LocalDateTime dataCad;
     private boolean ativo;
 
 }
