@@ -1,7 +1,6 @@
 package com.agenda.controller;
 
 import com.agenda.converters.Converter;
-import com.agenda.entity.Contato;
 import com.agenda.dtos.ContatoRequest;
 import com.agenda.dtos.ContatoResponse;
 import com.agenda.services.strategies.ContatoStrategy;
@@ -21,13 +20,10 @@ public class ContatoController {
 
     @PostMapping("/incluir")
     public ResponseEntity<String> incluir(@RequestBody ContatoRequest request){
-        try {
+
             var domain = strategy.incluir(converter.ConvertRequestToDomain(request));
             var response = converter.ConvertDomainToResponse(domain);
             return ResponseEntity.ok("Usuário cadastrado com id: " + response.getId());
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("erro interno: " + e.getMessage());
-        }
     }
 
     @GetMapping("/listar")
@@ -37,8 +33,8 @@ public class ContatoController {
     }
 
     @GetMapping("/pesquisar")
-    public ResponseEntity<List<ContatoResponse>> pesquisar(@RequestParam String tipo, @RequestParam String valor) {
-        var domain = strategy.buscar(tipo, valor);
+    public ResponseEntity<List<ContatoResponse>> pesquisar (@RequestParam String tipo, @RequestParam String valor) {
+        var domain = strategy.pesquisar(tipo, valor);
         return ResponseEntity.ok(converter.ConvertListDomainToListResponse(domain));
 
     }

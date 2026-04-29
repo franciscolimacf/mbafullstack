@@ -77,4 +77,12 @@ public class Converter {
         return domains.stream()
                 .map(this::ConvertDomainToResponse).toList();
     }
+    public void atualizarEntity(ContatoEntity entity, ContatoDomain domain) {
+        entity.setNome(domain.getNome());
+        entity.setTelefone(domain.getTelefone());
+        entity.setEndereco(domain.getEndereco());
+        entity.setIdade(domain.getIdade());
+        entity.setEmail(domain.getEmail());
+        entity.setTipo(ContatoTipo.valueOf(domain.getTipo().toString()));
+    }
 }

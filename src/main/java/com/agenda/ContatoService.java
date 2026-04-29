@@ -22,7 +22,7 @@ public class ContatoService implements ContatoStrategy {
     public ContatoDomain incluir (ContatoDomain domain)
     {
         if(!repository.VerificarEmail(domain.getEmail()))
-            throw new DataIntegrityViolationException("Email já existente");
+            throw new IllegalArgumentException("Email já existente: " + domain.getEmail());
         var contato = repository.save(converter.ConvertDomainToEntity(domain));
         return converter.ConvertEntityToDomain(contato);
     }
@@ -34,13 +34,26 @@ public class ContatoService implements ContatoStrategy {
     }
 
     @Override
-    public List<ContatoDomain> buscar (String tipo, String valor){
+    public List<ContatoDomain> pesquisar (String tipo, String valor){
         return strategies.stream()
                 .filter(strategy -> strategy.tipoValido(tipo))
                 .findFirst()
                 .map(strategy -> strategy.buscar(repository, valor))
                 .map(converter::ConvertListEntityToListDomain)
                 .orElseThrow(() -> new IllegalArgumentException("Tipo de busca inválido: " + tipo));
+
+    }
+
+    @Override
+    public ContatoDomain editar(Long id, ContatoDomain domain) {
+        var entity = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Contato não encontrado com id: " + id));
+                converter.atualizarEntity(entity, domain);
+                return converter.ConvertEntityToDomain(repository.save(entity));
+    }
+
+    @Override
+    public void excluir(Long id) {
 
     }
 }
