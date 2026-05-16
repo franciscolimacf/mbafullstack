@@ -1,12 +1,12 @@
-package com.agenda;
+package com.agenda.services;
 
 import com.agenda.converters.Converter;
 import com.agenda.domain.ContatoDomain;
+import com.agenda.domain.ContatoTipo;
 import com.agenda.repository.ContatoRepository;
 import com.agenda.services.strategies.ContatoStrategy;
 import com.agenda.services.strategies.PesquisaStrategy;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -21,16 +21,15 @@ public class ContatoService implements ContatoStrategy {
     @Override
     public ContatoDomain incluir (ContatoDomain domain)
     {
-        if(!repository.VerificarEmail(domain.getEmail()))
+        if(repository.existsByEmail(domain.getEmail()))
             throw new IllegalArgumentException("Email já existente: " + domain.getEmail());
         var contato = repository.save(converter.ConvertDomainToEntity(domain));
         return converter.ConvertEntityToDomain(contato);
     }
 
     @Override
-    public List<ContatoDomain> listar ()
-    {
-       return converter.ConvertListEntityToListDomain(repository.findAll());
+    public List<ContatoDomain> listar () {
+        return converter.ConvertListEntityToListDomain(repository.findAll());
     }
 
     @Override
@@ -48,12 +47,20 @@ public class ContatoService implements ContatoStrategy {
     public ContatoDomain editar(Long id, ContatoDomain domain) {
         var entity = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Contato não encontrado com id: " + id));
-                converter.atualizarEntity(entity, domain);
-                return converter.ConvertEntityToDomain(repository.save(entity));
+        if(repository.existsByEmailAndIdNot(domain.getEmail(), entity.getId()))
+            throw new IllegalArgumentException("Email já existente: " + domain.getEmail());
+        var entityEditada = converter.atualizarEntity(entity, domain);
+        return converter.ConvertEntityToDomain(repository.save(entityEditada));
     }
 
     @Override
     public void excluir(Long id) {
+        var entity = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Contato não encontrado com id: " + id));
 
+        if(entity.getTipo() == ContatoTipo.FAMILIA)
+            throw new RuntimeException("Não pode excluir contato do tipo FAMILIA");
+
+        repository.deleteById(id);
     }
 }

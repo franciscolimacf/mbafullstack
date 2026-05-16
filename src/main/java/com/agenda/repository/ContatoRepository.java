@@ -14,16 +14,6 @@ public interface ContatoRepository extends JpaRepository<ContatoEntity, Long> {
     List<ContatoEntity> findByEmailContainingIgnoreCase(String email);
     List<ContatoEntity> findByTelefoneContaining(String tel);
     List<ContatoEntity> findByTipo(ContatoTipo tipo);
-
-    public default boolean VerificarEmail(String email){
-        List<ContatoEntity> todos = this.findAll();
-
-        for (ContatoEntity todo : todos) {
-            if (todo.getEmail() != null && todo.getEmail().equals(email)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
+    boolean existsByEmail(String email);
+    boolean existsByEmailAndIdNot(String email, Long id);
 }
