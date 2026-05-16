@@ -7,9 +7,11 @@ import com.agenda.repository.ContatoRepository;
 import com.agenda.services.strategies.ContatoStrategy;
 import com.agenda.services.strategies.PesquisaStrategy;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ContatoService implements ContatoStrategy {
@@ -21,46 +23,59 @@ public class ContatoService implements ContatoStrategy {
     @Override
     public ContatoDomain incluir (ContatoDomain domain)
     {
-        if(repository.existsByEmail(domain.getEmail()))
+        log.info("Iniciando o processo de inclusão para o contato: " + domain.getNome());
+
+        if(repository.existsByEmail(domain.getEmail())){
             throw new IllegalArgumentException("Email já existente: " + domain.getEmail());
+        }
+
         var contato = repository.save(converter.ConvertDomainToEntity(domain));
+        log.info("Contato com ID = " + contato.getId() +" salvo com sucesso!");
         return converter.ConvertEntityToDomain(contato);
     }
 
     @Override
     public List<ContatoDomain> listar () {
+        log.info("Iniciando processo de listar todos os contatos.");
         return converter.ConvertListEntityToListDomain(repository.findAll());
     }
 
     @Override
     public List<ContatoDomain> pesquisar (String tipo, String valor){
+        log.info("Iniciando processo de pesquisa de contato. tipo = " + tipo + " e valor = " + valor);
         return strategies.stream()
                 .filter(strategy -> strategy.tipoValido(tipo))
                 .findFirst()
                 .map(strategy -> strategy.buscar(repository, valor))
                 .map(converter::ConvertListEntityToListDomain)
-                .orElseThrow(() -> new IllegalArgumentException("Tipo de busca inválido: " + tipo));
+                .orElseThrow(() -> new IllegalStateException("Tipo de busca inválido: " + tipo));
 
     }
 
     @Override
     public ContatoDomain editar(Long id, ContatoDomain domain) {
+        log.info("Iniciando processo de edição de contato de ID = " + id);
         var entity = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Contato não encontrado com id: " + id));
-        if(repository.existsByEmailAndIdNot(domain.getEmail(), entity.getId()))
+        if(repository.existsByEmailAndIdNot(domain.getEmail(), entity.getId())) {
             throw new IllegalArgumentException("Email já existente: " + domain.getEmail());
+        }
         var entityEditada = converter.atualizarEntity(entity, domain);
+        log.info("Contato com ID = " + id + " editado com sucesso!");
+
         return converter.ConvertEntityToDomain(repository.save(entityEditada));
     }
 
     @Override
     public void excluir(Long id) {
+        log.info("Iniciando processo de exclusão do contato de ID = " + id);
         var entity = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Contato não encontrado com id: " + id));
 
         if(entity.getTipo() == ContatoTipo.FAMILIA)
-            throw new RuntimeException("Não pode excluir contato do tipo FAMILIA");
+            throw new IllegalStateException("Não pode excluir contato do tipo FAMILIA");
 
+        log.info("Contato com ID = " + id + " excluído com sucesso!");
         repository.deleteById(id);
     }
 }
