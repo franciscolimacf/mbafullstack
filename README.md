@@ -1,9 +1,7 @@
-Readme · MD
-Copiar
 
 # 📒 Agenda de Contatos
  
-API REST para gerenciamento de contatos, desenvolvida com Java e Spring Boot.
+API REST para gerenciamento de contatos, desenvolvida com Java e Spring Boot para uso em sala de aula.
  
 ## Tecnologias
  
