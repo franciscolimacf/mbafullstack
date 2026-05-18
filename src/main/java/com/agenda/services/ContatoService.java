@@ -23,14 +23,14 @@ public class ContatoService implements ContatoStrategy {
     @Override
     public ContatoDomain incluir (ContatoDomain domain)
     {
-        log.info("Iniciando o processo de inclusão para o contato: " + domain.getNome());
+        log.info("Iniciando o processo de inclusão para o contato: {}", domain.getNome());
 
         if(repository.existsByEmail(domain.getEmail())){
             throw new IllegalArgumentException("Email já existente: " + domain.getEmail());
         }
 
         var contato = repository.save(converter.ConvertDomainToEntity(domain));
-        log.info("Contato com ID = " + contato.getId() +" salvo com sucesso!");
+        log.info("Contato com ID = {} salvo com sucesso!", contato.getId());
         return converter.ConvertEntityToDomain(contato);
     }
 
@@ -42,7 +42,7 @@ public class ContatoService implements ContatoStrategy {
 
     @Override
     public List<ContatoDomain> pesquisar (String tipo, String valor){
-        log.info("Iniciando processo de pesquisa de contato. tipo = " + tipo + " e valor = " + valor);
+        log.info("Iniciando processo de pesquisa de contato. tipo = {} e valor = {}", tipo, valor);
         return strategies.stream()
                 .filter(strategy -> strategy.tipoValido(tipo))
                 .findFirst()
@@ -54,28 +54,28 @@ public class ContatoService implements ContatoStrategy {
 
     @Override
     public ContatoDomain editar(Long id, ContatoDomain domain) {
-        log.info("Iniciando processo de edição de contato de ID = " + id);
+        log.info("Iniciando processo de edição de contato de ID = {}", id);
         var entity = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Contato não encontrado com id: " + id));
         if(repository.existsByEmailAndIdNot(domain.getEmail(), entity.getId())) {
             throw new IllegalArgumentException("Email já existente: " + domain.getEmail());
         }
         var entityEditada = converter.atualizarEntity(entity, domain);
-        log.info("Contato com ID = " + id + " editado com sucesso!");
+        log.info("Contato com ID = {} editado com sucesso!", id);
 
         return converter.ConvertEntityToDomain(repository.save(entityEditada));
     }
 
     @Override
     public void excluir(Long id) {
-        log.info("Iniciando processo de exclusão do contato de ID = " + id);
+        log.info("Iniciando processo de exclusão do contato de ID = {}", id);
         var entity = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Contato não encontrado com id: " + id));
 
         if(entity.getTipo() == ContatoTipo.FAMILIA)
             throw new IllegalStateException("Não pode excluir contato do tipo FAMILIA");
 
-        log.info("Contato com ID = " + id + " excluído com sucesso!");
+        log.info("Contato com ID = {} excluído com sucesso!", id);
         repository.deleteById(id);
     }
 }
