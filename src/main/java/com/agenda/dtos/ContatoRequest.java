@@ -10,6 +10,7 @@ public class ContatoRequest {
     private String nome;
     @NotBlank(message = "O telefone é obrigatório")
     private String telefone;
+    @NotBlank(message = "O email é obrigatório")
     @Email(message = "O e-mail deve ser válido")
     private String email;
     @NotBlank(message = "O endereço é obrigatório")
