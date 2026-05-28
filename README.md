@@ -5,7 +5,7 @@ API REST para gerenciamento de contatos, desenvolvida com Java e Spring Boot par
  
 ## Tecnologias
  
-Java 17 · Spring Boot · Spring Data JPA · Spring Validation · Lombok · PostgreSQL
+Java 21 · Spring Boot · Spring Data JPA · Spring Validation · Lombok · PostgreSQL
  
 ## Como rodar
  
@@ -17,9 +17,6 @@ spring.datasource.password=sua_senha
 spring.jpa.hibernate.ddl-auto=update
 ```
  
-```bash
-./mvnw spring-boot:run
-```
  
 ## Endpoints
  
@@ -46,16 +43,7 @@ spring.jpa.hibernate.ddl-auto=update
  
 Tipos disponíveis: `AMIGO` `FAMILIA` `TRABALHO` `OUTRO`
  
-## Erros
- 
-```json
-{
-  "status": 404,
-  "mensagem": "Contato não encontrado com id: 1",
-  "timestamp": "2026-04-29T10:30:00"
-}
-```
- 
+
 ---
  
 Feito por **Carlos Gabriel** e **Francisco Lima**
